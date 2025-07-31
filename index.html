@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CodeSphere - 云端代码助手演示</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+</head>
+<body>
+    <!-- Navigation Header -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="nav-brand">
+                <i class="fas fa-code"></i>
+                <span>CodeSphere</span>
+            </div>
+            <div class="nav-menu">
+                <a href="#dashboard" class="nav-link active" data-page="dashboard">
+                    <i class="fas fa-tachometer-alt"></i> Dashboard
+                </a>
+                <a href="#docs" class="nav-link" data-page="docs">
+                    <i class="fas fa-book"></i> 文档
+                </a>
+                <a href="#profile" class="nav-link" data-page="profile">
+                    <i class="fas fa-user"></i> 个人中心
+                </a>
+                <a href="#login" class="nav-link" data-page="login">
+                    <i class="fas fa-sign-in-alt"></i> 登录
+                </a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content Container -->
+    <div class="main-container">
+        <!-- Dashboard Page -->
+        <div id="dashboard" class="page active">
+            <div class="dashboard-header">
+                <h1>CodeSphere Dashboard</h1>
+                <p>基于原生 Claude Code 的云端代码助手</p>
+            </div>
+
+            <div class="dashboard-content">
+                <!-- Model Selection -->
+                <div class="model-section">
+                    <h3><i class="fas fa-robot"></i> 模型选择</h3>
+                    <div class="model-selector">
+                        <select id="modelSelect" class="model-dropdown">
+                            <option value="claude">Claude (默认)</option>
+                            <option value="kimi">Kimi</option>
+                            <option value="qwen">Qwen</option>
+                            <option value="glm">GLM</option>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- Input Section -->
+                <div class="input-section">
+                    <h3><i class="fas fa-terminal"></i> 输入指令</h3>
+                    <div class="input-container">
+                        <textarea id="commandInput" placeholder="输入您的代码指令或任务描述...&#10;例如：创建一个React组件，实现用户登录功能"></textarea>
+                        <div class="input-actions">
+                            <button class="upload-btn" onclick="triggerFileUpload()">
+                                <i class="fas fa-upload"></i> 上传文件
+                            </button>
+                            <button class="upload-btn" onclick="triggerImageUpload()">
+                                <i class="fas fa-image"></i> 上传图片
+                            </button>
+                            <button class="execute-btn" onclick="executeTask()">
+                                <i class="fas fa-play"></i> 执行任务
+                            </button>
+                        </div>
+                        <input type="file" id="fileInput" style="display: none" multiple>
+                        <input type="file" id="imageInput" style="display: none" accept="image/*" multiple>
+                    </div>
+                </div>
+
+                <!-- Task List -->
+                <div class="task-section">
+                    <h3><i class="fas fa-tasks"></i> 任务列表</h3>
+                    <div id="taskList" class="task-list">
+                        <!-- Tasks will be dynamically added here -->
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Login Page -->
+        <div id="login" class="page">
+            <div class="login-container">
+                <div class="login-box">
+                    <h2><i class="fas fa-sign-in-alt"></i> 登录 CodeSphere</h2>
+                    <form class="login-form">
+                        <div class="form-group">
+                            <label for="email">邮箱</label>
+                            <input type="email" id="email" placeholder="请输入您的邮箱地址">
+                        </div>
+                        <div class="form-group">
+                            <label for="password">密码</label>
+                            <input type="password" id="password" placeholder="请输入密码">
+                        </div>
+                        <button type="submit" class="login-btn">登录</button>
+                        <div class="divider">或</div>
+                        <button type="button" class="gmail-btn">
+                            <i class="fab fa-google"></i> 使用 Gmail 登录
+                        </button>
+                    </form>
+                    <div class="register-link">
+                        <p>还没有账户？ <a href="#" onclick="showRegister()">立即注册</a></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Profile Page -->
+        <div id="profile" class="page">
+            <div class="profile-container">
+                <h2><i class="fas fa-user"></i> 个人中心</h2>
+                <div class="profile-sections">
+                    <div class="profile-section">
+                        <h3><i class="fas fa-user-circle"></i> 我的账户</h3>
+                        <div class="account-info">
+                            <p><strong>用户名:</strong> demo@codesphere.com</p>
+                            <p><strong>账户类型:</strong> 免费用户</p>
+                            <p><strong>注册时间:</strong> 2024-01-15</p>
+                        </div>
+                    </div>
+                    
+                    <div class="profile-section">
+                        <h3><i class="fas fa-credit-card"></i> 计费</h3>
+                        <div class="billing-info">
+                            <p><strong>当前状态:</strong> 免费试用期</p>
+                            <p><strong>使用情况:</strong> 已使用 45/100 次免费调用</p>
+                            <p><strong>费用说明:</strong> 前期免费，用户只负担大模型的费用</p>
+                        </div>
+                    </div>
+                    
+                    <div class="profile-section">
+                        <h3><i class="fas fa-plug"></i> 模型接入</h3>
+                        <div class="model-integration">
+                            <div class="model-item">
+                                <span class="model-name">Kimi</span>
+                                <span class="model-status connected">已连接</span>
+                            </div>
+                            <div class="model-item">
+                                <span class="model-name">Qwen</span>
+                                <span class="model-status connected">已连接</span>
+                            </div>
+                            <div class="model-item">
+                                <span class="model-name">GLM</span>
+                                <span class="model-status disconnected">未连接</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Documentation Page -->
+        <div id="docs" class="page">
+            <div class="docs-container">
+                <h2><i class="fas fa-book"></i> 产品文档</h2>
+                <div class="docs-content">
+                    <section class="doc-section">
+                        <h3>产品特性</h3>
+                        <ul>
+                            <li><strong>安全隔离环境:</strong> 基于 AWS 的 Firecracker技术，毫秒级启动独立虚拟机</li>
+                            <li><strong>Git 集成:</strong> 支持代码仓库拉取、分支管理、自动提交PR</li>
+                            <li><strong>并行智能体:</strong> 同时启动多个智能体，分工合作完成复杂任务</li>
+                            <li><strong>云端运行:</strong> 无需本地配置环境，所有操作在云端完成</li>
+                            <li><strong>多模型支持:</strong> 集成第三方模型 Kimi、Qwen、GLM</li>
+                        </ul>
+                    </section>
+                    
+                    <section class="doc-section">
+                        <h3>使用流程</h3>
+                        <ol>
+                            <li>登录网站，接入模型</li>
+                            <li>切换到 Dashboard 页面，选择模型</li>
+                            <li>在输入框输入指令，任务列表新增执行记录</li>
+                            <li>点击任务进入详情，查看AI生成过程</li>
+                            <li>AI生成完成可保存结果到本地</li>
+                        </ol>
+                    </section>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Task Detail Modal -->
+    <div id="taskModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>任务详情</h3>
+                <span class="close" onclick="closeTaskModal()">&times;</span>
+            </div>
+            <div class="modal-body">
+                <div id="taskDetails"></div>
+                <div class="task-progress">
+                    <div class="progress-bar">
+                        <div class="progress-fill"></div>
+                    </div>
+                    <div class="progress-text">正在调用沙箱(Claude Code)...</div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="save-btn">保存结果到本地</button>
+                <button class="close-btn" onclick="closeTaskModal()">关闭</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
