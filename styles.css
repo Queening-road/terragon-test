@@ -8,7 +8,7 @@
 
 body {
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    background: #f5f5f5;
     min-height: 100vh;
     color: #333;
 }
@@ -899,4 +899,385 @@ body {
 
 .status-pending {
     color: #64748b;
+}
+
+/* New Dashboard Styles to match reference design */
+
+/* Chat Container */
+.chat-container {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 2rem;
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+    min-height: 80vh;
+}
+
+/* Chat Input Container */
+.chat-input-container {
+    background: white;
+    border: 1px solid #e5e5e5;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.chat-input-wrapper {
+    display: flex;
+    flex-direction: column;
+}
+
+.chat-input {
+    border: none;
+    outline: none;
+    padding: 20px;
+    font-size: 16px;
+    font-family: inherit;
+    resize: none;
+    min-height: 120px;
+    background: transparent;
+    color: #666;
+    line-height: 1.5;
+}
+
+.chat-input::placeholder {
+    color: #999;
+}
+
+.input-toolbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px 20px;
+    background: #fafafa;
+    border-top: 1px solid #e5e5e5;
+}
+
+.toolbar-left {
+    display: flex;
+    align-items: center;
+}
+
+.model-selector {
+    background: transparent;
+    border: none;
+    font-size: 14px;
+    color: #666;
+    cursor: pointer;
+    padding: 4px 8px;
+    border-radius: 6px;
+    appearance: none;
+}
+
+.model-selector:hover {
+    background: rgba(0, 0, 0, 0.05);
+}
+
+.model-selector:focus {
+    outline: none;
+    background: rgba(0, 0, 0, 0.05);
+}
+
+.toolbar-right {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.toolbar-btn {
+    background: transparent;
+    border: none;
+    padding: 8px;
+    border-radius: 6px;
+    cursor: pointer;
+    color: #666;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s ease;
+}
+
+.toolbar-btn:hover {
+    background: rgba(0, 0, 0, 0.05);
+    color: #333;
+}
+
+.send-btn {
+    background: #f0f0f0;
+    border: none;
+    padding: 8px 12px;
+    border-radius: 6px;
+    cursor: pointer;
+    color: #333;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s ease;
+}
+
+.send-btn:hover {
+    background: #e0e0e0;
+}
+
+/* Repository Info */
+.repo-info {
+    display: flex;
+    gap: 1rem;
+    align-items: center;
+    padding: 0 4px;
+}
+
+.repo-selector,
+.branch-selector {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    color: #666;
+    font-size: 14px;
+}
+
+.repo-selector i,
+.branch-selector i {
+    color: #999;
+    font-size: 12px;
+}
+
+.repo-dropdown,
+.branch-dropdown {
+    background: transparent;
+    border: none;
+    color: #666;
+    cursor: pointer;
+    font-size: 14px;
+    padding: 4px 8px;
+    border-radius: 4px;
+    appearance: none;
+}
+
+.repo-dropdown:hover,
+.branch-dropdown:hover {
+    background: rgba(0, 0, 0, 0.05);
+}
+
+.repo-dropdown:focus,
+.branch-dropdown:focus {
+    outline: none;
+    background: rgba(0, 0, 0, 0.05);
+}
+
+/* Tasks Container */
+.tasks-container {
+    flex: 1;
+}
+
+.tasks-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1.5rem;
+    padding: 0 4px;
+}
+
+.tasks-header h2 {
+    font-size: 24px;
+    font-weight: 600;
+    color: #333;
+}
+
+.tasks-filter {
+    display: flex;
+    align-items: center;
+}
+
+.filter-dropdown {
+    background: transparent;
+    border: none;
+    color: #666;
+    cursor: pointer;
+    font-size: 14px;
+    padding: 4px 8px;
+    border-radius: 4px;
+    appearance: none;
+}
+
+.filter-dropdown:hover {
+    background: rgba(0, 0, 0, 0.05);
+}
+
+.filter-dropdown:focus {
+    outline: none;
+    background: rgba(0, 0, 0, 0.05);
+}
+
+/* Task Groups */
+.task-groups {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+
+.task-group {
+    display: flex;
+    flex-direction: column;
+}
+
+.task-group-header {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    color: #666;
+    font-size: 16px;
+    font-weight: 500;
+    margin-bottom: 12px;
+    cursor: pointer;
+    padding: 4px;
+    border-radius: 4px;
+    transition: all 0.2s ease;
+    user-select: none;
+}
+
+.task-group-header:hover {
+    background: rgba(0, 0, 0, 0.05);
+}
+
+.task-group-header i {
+    font-size: 12px;
+    transition: transform 0.2s ease;
+}
+
+.task-group.collapsed .task-group-header i {
+    transform: rotate(-90deg);
+}
+
+.task-group-items {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    padding-left: 20px;
+}
+
+.task-group.collapsed .task-group-items {
+    display: none;
+}
+
+/* Task Items */
+.task-item-new {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px 16px;
+    background: white;
+    border: 1px solid #e5e5e5;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.task-item-new:hover {
+    border-color: #d0d0d0;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+.task-status-icon {
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 10px;
+    flex-shrink: 0;
+}
+
+.task-status-icon.completed {
+    background: #10b981;
+    color: white;
+}
+
+.task-status-icon.running {
+    background: #f59e0b;
+    color: white;
+    animation: pulse-new 2s ease-in-out infinite;
+}
+
+.task-status-icon.pending {
+    background: #e5e5e5;
+    color: #666;
+}
+
+@keyframes pulse-new {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.5; }
+}
+
+.task-content {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.task-title {
+    font-size: 14px;
+    color: #333;
+    font-weight: 500;
+    line-height: 1.3;
+}
+
+.task-meta {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 12px;
+    color: #666;
+}
+
+.task-time::before {
+    content: "•";
+    margin-right: 4px;
+}
+
+.task-stats {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    color: #666;
+    font-size: 12px;
+}
+
+.task-stat {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}
+
+.task-stat.positive {
+    color: #10b981;
+}
+
+/* Empty State */
+.empty-tasks {
+    text-align: center;
+    color: #999;
+    font-style: italic;
+    padding: 3rem 1rem;
+}
+
+/* Override main container styles for dashboard */
+#dashboard .main-container {
+    background: transparent;
+    padding: 0;
+}
+
+#dashboard {
+    background: #f5f5f5;
+    min-height: 100vh;
+    padding-top: 0;
+}
+
+/* Hide old dashboard elements */
+#dashboard .dashboard-header,
+#dashboard .dashboard-content {
+    display: none;
 }

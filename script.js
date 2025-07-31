@@ -43,6 +43,31 @@ class CodeSphereDemo {
                 this.showModelChangeNotification(e.target.value);
             });
         }
+
+        // Task group collapsing
+        this.setupTaskGroupListeners();
+
+        // Auto-resize textarea
+        const chatInput = document.getElementById('commandInput');
+        if (chatInput) {
+            chatInput.addEventListener('input', this.autoResizeTextarea.bind(this));
+        }
+    }
+
+    setupTaskGroupListeners() {
+        document.addEventListener('click', (e) => {
+            if (e.target.closest('.task-group-header')) {
+                const header = e.target.closest('.task-group-header');
+                const group = header.closest('.task-group');
+                group.classList.toggle('collapsed');
+            }
+        });
+    }
+
+    autoResizeTextarea(event) {
+        const textarea = event.target;
+        textarea.style.height = 'auto';
+        textarea.style.height = Math.max(60, textarea.scrollHeight) + 'px';
     }
 
     showPage(pageId) {
@@ -189,44 +214,76 @@ class CodeSphereDemo {
     }
 
     renderTaskList() {
-        const taskList = document.getElementById('taskList');
-        if (!taskList) return;
+        // Group tasks by date
+        const todayTasks = this.tasks.filter(task => this.isToday(task.timestamp));
+        const yesterdayTasks = this.tasks.filter(task => this.isYesterday(task.timestamp));
 
-        if (this.tasks.length === 0) {
-            taskList.innerHTML = '<div class="no-tasks">暂无任务，请在上方输入框中输入指令开始</div>';
+        // Render today's tasks
+        this.renderTaskGroup('todayTasks', todayTasks);
+        
+        // Render yesterday's tasks
+        this.renderTaskGroup('yesterdayTasks', yesterdayTasks);
+    }
+
+    renderTaskGroup(containerId, tasks) {
+        const container = document.getElementById(containerId);
+        if (!container) return;
+
+        if (tasks.length === 0) {
+            container.innerHTML = '<div class="empty-tasks">暂无任务</div>';
             return;
         }
 
-        taskList.innerHTML = this.tasks.map(task => `
-            <div class="task-item" data-task-id="${task.id}">
-                <div class="task-header">
-                    <div class="task-info">
-                        <span class="task-id">#${task.id}</span>
-                        <span class="task-model">${this.getModelDisplayName(task.model)}</span>
-                        <span class="task-time">${this.formatTime(task.timestamp)}</span>
-                    </div>
-                    <div class="task-actions">
-                        <button class="task-btn" onclick="demo.showTaskDetails(${task.id})">
-                            <i class="fas fa-eye"></i> 详情
-                        </button>
-                        <button class="task-btn" onclick="demo.renameTask(${task.id})">
-                            <i class="fas fa-edit"></i> 重命名
-                        </button>
-                        <button class="task-btn delete" onclick="demo.deleteTask(${task.id})">
-                            <i class="fas fa-trash"></i> 删除
-                        </button>
+        container.innerHTML = tasks.map(task => `
+            <div class="task-item-new" data-task-id="${task.id}" onclick="demo.showTaskDetails(${task.id})">
+                <div class="task-status-icon ${task.status}">
+                    ${task.status === 'completed' ? '<i class="fas fa-check"></i>' : 
+                      task.status === 'running' ? '<i class="fas fa-spinner"></i>' : 
+                      '<i class="fas fa-clock"></i>'}
+                </div>
+                <div class="task-content">
+                    <div class="task-title">${task.command}</div>
+                    <div class="task-meta">
+                        <span class="task-time">${this.getRelativeTime(task.timestamp)}</span>
+                        <span class="task-repo">Queening-road/terragon-test</span>
                     </div>
                 </div>
-                <div class="task-command">${task.command}</div>
-                <div class="task-status-bar">
-                    <span class="task-status ${task.status}">${task.status === 'completed' ? '已完成' : task.status === 'running' ? `进行中 ${Math.round(task.progress)}%` : '待执行'}</span>
-                    <div class="task-progress">
-                        <div class="task-progress-fill" style="width: ${task.progress}%"></div>
-                    </div>
+                <div class="task-stats">
+                    ${task.status === 'completed' && task.result ? `
+                        <div class="task-stat positive">
+                            <i class="fas fa-plus"></i>
+                            <span>+${Math.floor(Math.random() * 2000) + 100}</span>
+                        </div>
+                    ` : ''}
                 </div>
-                ${task.result ? `<div class="task-result">${task.result}</div>` : ''}
             </div>
         `).join('');
+    }
+
+    isToday(date) {
+        const today = new Date();
+        return date.toDateString() === today.toDateString();
+    }
+
+    isYesterday(date) {
+        const yesterday = new Date();
+        yesterday.setDate(yesterday.getDate() - 1);
+        return date.toDateString() === yesterday.toDateString();
+    }
+
+    getRelativeTime(timestamp) {
+        const now = new Date();
+        const diff = now - timestamp;
+        const minutes = Math.floor(diff / (1000 * 60));
+        const hours = Math.floor(diff / (1000 * 60 * 60));
+
+        if (minutes < 60) {
+            return `${minutes} min ago`;
+        } else if (hours < 24) {
+            return `${hours} hr ago`;
+        } else {
+            return timestamp.toLocaleDateString();
+        }
     }
 
     getModelDisplayName(model) {
@@ -367,21 +424,43 @@ function showRegister() {
     demo.showRegister();
 }
 
+function startVoiceInput() {
+    demo.showNotification('语音输入功能开发中...', 'info');
+}
+
 // Initialize demo when page loads
 let demo;
 document.addEventListener('DOMContentLoaded', () => {
     demo = new CodeSphereDemo();
     
-    // Add some sample tasks for demonstration
+    // Add some sample tasks for demonstration to match reference design
     setTimeout(() => {
-        document.getElementById('commandInput').value = '创建一个React登录组件';
-        demo.executeTask();
-        
-        setTimeout(() => {
-            document.getElementById('commandInput').value = '生成Python数据分析脚本';
-            demo.executeTask();
-        }, 2000);
-    }, 1000);
+        // Add a completed task from "today"
+        const completedTask = {
+            id: demo.taskIdCounter++,
+            command: 'Create interactive product demo site from design prototype and requirements',
+            status: 'completed',
+            model: 'sonnet',
+            timestamp: new Date(Date.now() - 10 * 60 * 1000), // 10 minutes ago
+            progress: 100,
+            result: '成功创建了交互式产品演示网站，包含完整的UI组件和功能'
+        };
+        demo.tasks.unshift(completedTask);
+
+        // Add another completed task
+        const scriptTask = {
+            id: demo.taskIdCounter++,
+            command: 'Script to Retrieve CPU Core Count',
+            status: 'completed',
+            model: 'sonnet',
+            timestamp: new Date(Date.now() - 9 * 60 * 60 * 1000), // 9 hours ago
+            progress: 100,
+            result: '成功生成了获取CPU核心数量的脚本'
+        };
+        demo.tasks.unshift(scriptTask);
+
+        demo.renderTaskList();
+    }, 500);
 });
 
 // Handle file uploads

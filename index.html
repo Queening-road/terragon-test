@@ -36,53 +36,99 @@
     <div class="main-container">
         <!-- Dashboard Page -->
         <div id="dashboard" class="page active">
-            <div class="dashboard-header">
-                <h1>CodeSphere Dashboard</h1>
-                <p>基于原生 Claude Code 的云端代码助手</p>
-            </div>
+            <div class="chat-container">
+                <!-- Chat Input -->
+                <div class="chat-input-container">
+                    <div class="chat-input-wrapper">
+                        <textarea id="commandInput" class="chat-input" placeholder="Build a REST API endpoint with proper error handling and validation..." rows="1"></textarea>
+                        <div class="input-toolbar">
+                            <div class="toolbar-left">
+                                <select id="modelSelect" class="model-selector">
+                                    <option value="sonnet">Sonnet</option>
+                                    <option value="claude">Claude</option>
+                                    <option value="kimi">Kimi</option>
+                                    <option value="qwen">Qwen</option>
+                                    <option value="glm">GLM</option>
+                                </select>
+                            </div>
+                            <div class="toolbar-right">
+                                <button class="toolbar-btn" onclick="triggerFileUpload()" title="上传文件">
+                                    <i class="fas fa-plus"></i>
+                                </button>
+                                <button class="toolbar-btn" onclick="triggerImageUpload()" title="上传图片">
+                                    <i class="fas fa-image"></i>
+                                </button>
+                                <button class="toolbar-btn" onclick="startVoiceInput()" title="语音输入">
+                                    <i class="fas fa-microphone"></i>
+                                </button>
+                                <button class="send-btn" onclick="executeTask()" title="发送">
+                                    <i class="fas fa-arrow-right"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
 
-            <div class="dashboard-content">
-                <!-- Model Selection -->
-                <div class="model-section">
-                    <h3><i class="fas fa-robot"></i> 模型选择</h3>
-                    <div class="model-selector">
-                        <select id="modelSelect" class="model-dropdown">
-                            <option value="claude">Claude (默认)</option>
-                            <option value="kimi">Kimi</option>
-                            <option value="qwen">Qwen</option>
-                            <option value="glm">GLM</option>
+                <!-- Repository Info -->
+                <div class="repo-info">
+                    <div class="repo-selector">
+                        <i class="fas fa-code-branch"></i>
+                        <select class="repo-dropdown">
+                            <option value="queening-road/terragon-test">Queening-road/terragon-test</option>
+                            <option value="codesphere/demo-project">CodeSphere/demo-project</option>
+                            <option value="user/my-project">User/my-project</option>
+                        </select>
+                    </div>
+                    <div class="branch-selector">
+                        <i class="fas fa-code-branch"></i>
+                        <select class="branch-dropdown">
+                            <option value="main">main</option>
+                            <option value="develop">develop</option>
+                            <option value="feature/new-ui">feature/new-ui</option>
                         </select>
                     </div>
                 </div>
 
-                <!-- Input Section -->
-                <div class="input-section">
-                    <h3><i class="fas fa-terminal"></i> 输入指令</h3>
-                    <div class="input-container">
-                        <textarea id="commandInput" placeholder="输入您的代码指令或任务描述...&#10;例如：创建一个React组件，实现用户登录功能"></textarea>
-                        <div class="input-actions">
-                            <button class="upload-btn" onclick="triggerFileUpload()">
-                                <i class="fas fa-upload"></i> 上传文件
-                            </button>
-                            <button class="upload-btn" onclick="triggerImageUpload()">
-                                <i class="fas fa-image"></i> 上传图片
-                            </button>
-                            <button class="execute-btn" onclick="executeTask()">
-                                <i class="fas fa-play"></i> 执行任务
-                            </button>
+                <!-- Tasks Section -->
+                <div class="tasks-container">
+                    <div class="tasks-header">
+                        <h2>Tasks</h2>
+                        <div class="tasks-filter">
+                            <select class="filter-dropdown">
+                                <option value="active">Active</option>
+                                <option value="completed">Completed</option>
+                                <option value="all">All</option>
+                            </select>
                         </div>
-                        <input type="file" id="fileInput" style="display: none" multiple>
-                        <input type="file" id="imageInput" style="display: none" accept="image/*" multiple>
+                    </div>
+
+                    <!-- Task Groups -->
+                    <div class="task-groups">
+                        <div class="task-group">
+                            <div class="task-group-header">
+                                <i class="fas fa-chevron-down"></i>
+                                <span class="group-title">Today</span>
+                            </div>
+                            <div id="todayTasks" class="task-group-items">
+                                <!-- Today's tasks will be added here -->
+                            </div>
+                        </div>
+
+                        <div class="task-group">
+                            <div class="task-group-header">
+                                <i class="fas fa-chevron-down"></i>
+                                <span class="group-title">Yesterday</span>
+                            </div>
+                            <div id="yesterdayTasks" class="task-group-items">
+                                <!-- Yesterday's tasks will be added here -->
+                            </div>
+                        </div>
                     </div>
                 </div>
 
-                <!-- Task List -->
-                <div class="task-section">
-                    <h3><i class="fas fa-tasks"></i> 任务列表</h3>
-                    <div id="taskList" class="task-list">
-                        <!-- Tasks will be dynamically added here -->
-                    </div>
-                </div>
+                <!-- Hidden file inputs -->
+                <input type="file" id="fileInput" style="display: none" multiple>
+                <input type="file" id="imageInput" style="display: none" accept="image/*" multiple>
             </div>
         </div>
 
